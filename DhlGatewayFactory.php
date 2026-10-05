@@ -7,7 +7,6 @@ use Omnibus\Dhl\Action\PickupAction;
 use Omnibus\Dhl\Action\RatingAction;
 use Omnibus\Dhl\Action\ShippingAction;
 use Omnibus\Dhl\Action\TrackingAction;
-use Omnibus\Exception\InvalidConfigException;
 use Omnibus\GatewayFactory;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -31,7 +30,7 @@ final class DhlGatewayFactory extends GatewayFactory
             'sandbox' => false,
             'location_api_key' => null,
             'omnibus.api' => function (Config $c) {
-                $http = $this->http ?? (class_exists(HttpClient::class) ? HttpClient::create() : throw new InvalidConfigException('The "dhl" gateway needs symfony/http-client.'));
+                $http = $this->http ?? HttpClient::create();
 
                 return new Api($http, (string) $c['api_key'], (string) $c['api_secret'], (string) $c['account_number'], (bool) $c['sandbox'], $c['location_api_key'] ?: null);
             },
